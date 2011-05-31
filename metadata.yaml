@@ -1,0 +1,12 @@
+ensemble: formula
+name: drupal
+revision: 201105311725
+summary: "Drupal site"
+description: |
+    Installs a Drupal site.  Upon the database provider
+    providing the required database, and the relation settings
+    necessary to access it, completes the configuration of Drupal
+    and makes it available on the web.
+requires:
+  db:
+    interface: mysql
