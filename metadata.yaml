@@ -10,3 +10,6 @@ description: |
 requires:
   db:
     interface: mysql
+provides:
+  website:
+    interface: http
