@@ -1,18 +1,23 @@
-# General
+# Principia Drupal
 
 This is an Ensemble formula for Drupal.
 
 Find out more about [Ensemble](http://ensemble.ubuntu.com/).
 
 
-# Usage
+# Installation
 
-## Setup principia repositories
+## Setup a formula repository
+
+Create a formula repository called `principia` and clone this repo into it:
 
     $ mkdir principia
     $ cd principia
     $ git clone git@github.com:mmm/principia-drupal.git drupal
     $ cd ..
+
+
+# Usage
 
 ## Use ensemble to deploy
 
