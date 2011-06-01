@@ -1,3 +1,32 @@
 #!/bin/bash
 
-apt-get -y install drupal6
+
+apt-get install -qqy debconf-utils 
+
+echo postfix postfix/main_mailer_type select 'Internet Site' | debconf-set-selections
+echo postfix postfix/mail_name string $HOSTNAME | debconf-set-selections
+DEBIAN_FRONTEND=noninteractive apt-get -y install -qq postfix
+
+sudo apt-get install -qqy python-mysqldb uuid augeas-tools augeas-lenses pwgen
+
+PASSFILE=/var/lib/ensemble/mysql.passwd 
+if ! [ -f $PASSFILE ] ; then
+  uuid > $PASSFILE
+fi
+PASSWORD=`cat $PASSFILE`
+
+echo mysql-server-5.1 mysql-server/root_password password $PASSWORD | debconf-set-selections
+echo mysql-server-5.1 mysql-server/root_password_again password $PASSWORD | debconf-set-selections
+DEBIAN_FRONTEND=noninteractive apt-get -y install -qq mysql-server
+
+echo drupal6 drupal6/mysql/admin-pass  password $PASSWORD | debconf-set-selections
+echo drupal6 drupal6/database-type select  mysql | debconf-set-selections
+echo drupal6 drupal6/dbconfig-upgrade  boolean false | debconf-set-selections
+echo drupal6 drupal6/dbconfig-reinstall  boolean false | debconf-set-selections
+echo drupal6 drupal6/internal/skip-preseed boolean false | debconf-set-selections
+echo drupal6 drupal6/dbconfig-install  boolean false | debconf-set-selections
+DEBIAN_FRONTEND=noninteractive apt-get -y install -qq drupal6
+
+ln -s /etc/drupal/6/apache.conf /etc/apache2/conf.d/drupal6.conf
+
+/etc/init.d/apache2 restart
