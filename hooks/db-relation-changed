@@ -31,24 +31,26 @@ DB_PASSWORD: $password
 DB_HOST: $host
 EOF
 
-#ensemble-log "configuring drupal to work with the mysql service"
-echo drupal6 drupal6/dbconfig-upgrade  boolean false | debconf-set-selections
-echo drupal6 drupal6/dbconfig-reinstall  boolean false | debconf-set-selections
-echo drupal6 drupal6/internal/skip-preseed boolean false | debconf-set-selections
-echo drupal6 drupal6/dbconfig-install  boolean false | debconf-set-selections
-echo drupal6 drupal6/mysql/app-pass password $password | debconf-set-selections
-echo drupal6 drupal6/db/app-user string $user | debconf-set-selections
-echo drupal6 drupal6/db/dbname string $database | debconf-set-selections
-echo drupal6 drupal6/remote/host string $host | debconf-set-selections
-echo drupal6 drupal6/remote/newhost string $host | debconf-set-selections
+ensemble-log "configuring drupal to work with the mysql service"
 
-#echo drupal6 drupal6/database-type select mysql | debconf-set-selections
-#echo drupal6 drupal6/mysql/method select unix socket | debconf-set-selections
-#echo drupal6 drupal6/remote/port string | debconf-set-selections
-
-
-
-DEBIAN_FRONTEND=noninteractive dpkg-reconfigure drupal6
+config_file_path="/etc/drupal/6/sites/default/dbconfig.php"
+ensemble-log "Writing drupal config file $config_file_path"
+cat > $config_file_path <<EOF
+<?php
+##
+## database access settings in php format
+##
+\$dbuser='$user';
+\$dbpass='$password';
+\$basepath='';
+\$dbname='$database';
+\$dbserver='$host';
+\$dbport='';
+\$dbtype='mysql';
+?>
+EOF
+chown root:www-data $config_file_path
+chmod 0640 $config_file_path
 
 ensemble-log "Restart apache"
 /etc/init.d/apache2 restart
