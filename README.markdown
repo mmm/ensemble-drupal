@@ -136,3 +136,57 @@ In the above example, this would look like
     http://ec2-174-129-114-51.compute-1.amazonaws.com/drupal6/install.php
 
 
+
+# More Instances - Rinse and Repeat
+ 
+Scale out your drupal service by adding more units to your ensemble.
+
+Start with a working drupal service that's already been related to a mysql service
+as in the example above.
+Then
+ 
+    $ ensemble add-unit drupal
+ 
+will add another drupal instance and relate it to the common mysql service.
+
+Then status shows
+
+    $ ensemble status
+    2011-06-01 20:34:13,698 INFO Connecting to environment.
+    machines:
+      0: {dns-name: ec2-75-101-228-56.compute-1.amazonaws.com, instance-id: i-4507b52b}
+      1: {dns-name: ec2-50-19-2-206.compute-1.amazonaws.com, instance-id: i-7108ba1f}
+      2: {dns-name: ec2-174-129-114-51.compute-1.amazonaws.com, instance-id: i-ed08ba83}
+      3: {dns-name: ec2-75-101-203-234.compute-1.amazonaws.com, instance-id: i-d3e855bd}
+    services:
+      drupal:
+        formula: local:drupal-201105311725
+        relations: {db: mysql}
+        units:
+          drupal/0:
+            machine: 2
+            relations:
+              db: {state: up}
+            state: started
+          drupal/1:
+            machine: 3
+            relations:
+              db: {state: up}
+            state: started
+      mysql:
+        formula: local:mysql-81
+        relations: {db: drupal}
+        units:
+          mysql/0:
+            machine: 1
+            relations:
+              db: {state: up}
+            state: started
+    2011-06-01 20:34:18,358 INFO 'status' command finished successfully
+
+Now connect to the new drupal unit in a browser
+
+    http://ec2-75-101-203-234.compute-1.amazonaws.com/drupal6
+
+and you see the same content created in the first one.
+
