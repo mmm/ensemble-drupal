@@ -15,13 +15,6 @@ user=`relation-get user`
 password=`relation-get password`
 host=`relation-get host`
 
-ensemble-log "Writing config out to a testfile"
-cat > /tmp/relation-config.txt <<EOF
-DB_NAME: $database
-DB_USER: $user
-DB_PASSWORD: $password
-DB_HOST: $host
-EOF
 
 ensemble-log "configuring drupal to work with the mysql service"
 
