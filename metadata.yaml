@@ -10,6 +10,9 @@ description: |
 requires:
   db:
     interface: mysql
+  filestore:
+    interface: mount
+    optional: true
 provides:
   website:
     interface: http
