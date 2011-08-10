@@ -1,0 +1,12 @@
+#!/bin/sh
+set -ue
+
+hostname=`hostname -f`
+remote_host=`relation-get hostname`
+if [ -z "$remote_host" ] ; then
+    ensemble-log "remote host not set yet."
+    exit 0
+fi
+
+remote_ip=`dig +short $remote_host|head -n 1`
+

@@ -22,6 +22,8 @@ echo drupal6 drupal6/internal/skip-preseed boolean false | debconf-set-selection
 echo drupal6 drupal6/dbconfig-install  boolean false | debconf-set-selections
 DEBIAN_FRONTEND=noninteractive apt-get -y install -qq --no-install-recommends drupal6
 
+DEBIAN_FRONTEND=noninteractive apt-get -y install -qq --no-install-recommends php5-pgsql postgresql-client
+
 ensemble-log "Configure apache vhost for the drupal site"
 if [ -f /etc/drupal/6/apache.conf ]; then
   ln -sf /etc/drupal/6/apache.conf /etc/apache2/conf.d/drupal6.conf

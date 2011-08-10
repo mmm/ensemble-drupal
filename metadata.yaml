@@ -1,6 +1,6 @@
 ensemble: formula
 name: drupal
-revision: 201105311725
+revision: 2011071316061
 summary: "Drupal site"
 description: |
     Installs a Drupal site.  Upon the database provider
@@ -8,9 +8,13 @@ description: |
     necessary to access it, completes the configuration of Drupal
     and makes it available on the web.
 requires:
-  db:
+  db-mysql:
     interface: mysql
-  filestore:
+    optional: true
+  db-pgsql:
+    interface: pgsql
+    optional: true
+  storage:
     interface: mount
     optional: true
 provides:
